@@ -75,3 +75,34 @@ arr					; ==> ["b" 2 3 4 ... 9]
 (append [1 2 3] nil)			; ==> (1 2 3)
 (append [1 2 3] [4 5])			; ==> (1 2 3 . [4 5]), 特别注意了！
 (append [1 2 3] [4 5] '(6))		; ==> (1 2 3 4 5 6 6), 奇淫巧技
+
+;; 11. Alist: Association List
+;; Association List 是指元素是 CONS CELL对的List
+;; 可以有重复的key
+(setq alist '(("mary" . 24)
+	      ("joah" . 24)
+	      ("smith" . 33)))
+
+;; Get Alist Element by key
+;; 获取第一个找到的CONS CELL
+(assoc "joah" alist)			; ==> ("joah" . 24)
+
+;; Get Alist Element by value
+(rassoc 24 alist)			; ==> ("mary" . 24)
+(rassq 24 alist)			; ==> ("mary" . 24)
+
+;; 12. plist: Property List
+;; Property List的结构为： '(key1 value1 key2 value2 ... keyN valueN), key是symbol
+;; 主要应用：1. Symbole's的list 2. Text Property。数据量不大的list
+(setq plist '(x 1 y 2 z 3))
+(plist-get plist 'x)			; ==> 1
+(plist-get plist 'z)			; ==> 3
+(plist-get plist y)			; ==> nil,
+
+;; 判断key是否存在
+(plist-member plist y)			; ==> nil
+(plist-member plist 'y)			; ==> (y 2 z 3)
+
+;; 修改plist
+(plist-put plist 'y 9)			; ==> (x 1 y 9 z 3)
+
