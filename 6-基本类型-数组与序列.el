@@ -106,3 +106,54 @@ arr					; ==> ["b" 2 3 4 ... 9]
 ;; 修改plist
 (plist-put plist 'y 9)			; ==> (x 1 y 9 z 3)
 
+;; 13. mapcar, 相当于js中的map
+(mapcar '1+ [1 2 3])			; ==> (2 3 4)
+
+(setq alist '((1 2) (3 4) (5 6)))
+(mapcar 'car alist)			; ==> (1 3 5)
+
+(mapcar
+ (lambda (x) (* x x))
+ '(1 2 3 4))				; ==> (1 4 9 16)
+
+;; 14. mapc，相当于js中的forEach，没有返回值
+(mapc
+ (lambda (x) (insert (number-to-string (* x x))))
+ '(1 2 3 4))
+
+;; 15. dolist 与mapcar,mapc类似，只不过dolist只能接收list序列，
+;; 并且使用使用表达式而不是函数来处理序列的元素
+;; 
+;; (dolist (VAR LIST RESULT) BODY) --> RESULT
+;; (dolist (VAR LIST) BODY) --> nil
+(let ((xlist (number-sequence 97 122)))
+  (dolist (n xlist) (insert n)))
+
+;; 16. dotimes
+;;
+;; (dotimes (VAR COUNT) BODY)
+;; (dotimes (VAR COUNT RESULT) BODY)
+;;
+;; 与dolist类似，不过接收的是一个COUNT整数，VAR从0开始计数
+(dotimes (i 4)
+  (insert (number-to-string i)))
+
+
+;; 17. filter a list
+;;
+;; emacs lisp竟然没有天然的filter函数，需要引入cl-lib库
+(cl-remove-if-not 'numberp '(1 "a" 2))	; ==> (1 2)
+(cl-remove-if 'numberp '(1 "a" 2))	; ==> ("a")
+
+
+
+
+
+
+
+
+
+
+
+
+
