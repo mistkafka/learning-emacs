@@ -1,0 +1,57 @@
+
+* Elisp Scripts Hot-to
+** Run Elisp Script in Shell [[http://ergoemacs.org/emacs/elisp_running_script_in_batch_mode.html][(link)]]
+   use ~--script~ option. for Example:
+   #+BEGIN_SRC emacs-lisp
+emacs --script xx-script.el
+   #+END_SRC
+
+   More options is here:
+   | option Full Syntax | Option Short Syntax | Meaning                                            |
+   |--------------------+---------------------+----------------------------------------------------|
+   |                    |                     | <50>                                               |
+   | --no-init-file     | -q                  | Don't load init files {~/.emacs, ~/.emacs.el, ~/.emacs.d/init.el} nor site-wide default.el. |
+   | --no-site-file     |                     | Don't load the side-wide site-start.el             |
+   | --batch            |                     | Don't launch emacs as editor. Use it together with --load to specify a lisp file. This implies --no-init-file but not --no-site-file |
+   | --load="path"      | -l path             | Execute the elisp file at path                     |
+   | --script path      |                     | Run emacs like --batch with --load set to path     |
+
+** Read/Write to File
+*** Read-Only Text Processing
+    To process thousands of files, read only, use =with-temp-buffer=.
+    
+    #+BEGIN_SRC elisp
+(defun my-process-file-readonly (fPath)
+  "Process the file at path FPATH..."
+  (with-temp-buffer
+    (insert-file-contens fPath)
+    (message "%s" (buffer-string))))
+    #+END_SRC
+    
+    *Note:* you shouldn't use =find-file= or =write-file=, because they have many side-effects and is slow. See: [[http://ergoemacs.org/emacs/elisp_find-file_vs_with-temp-buffer.html][Emacs Lisp Text Processing: find-file vs with-temp-buffer]]
+
+*** Modify Files
+    If you want to change every file you opened, use =with-temp-file=. It will write file automatic.
+
+    #+BEGIN_SRC elisp
+(defun my-process-file-write-mode (fPath)
+  "Process (with write) the file at path FPATH..."
+  (with-temp-file fPath
+    (insert-file-contents fPath)
+    ;; process text modify
+    ))
+    #+END_SRC
+
+
+    If you want to write to file *ONLY* when you actually changed the file, you can use =with-temp-buffer= and =write-region=. Like this:
+
+    #+BEGIN_SRC elisp
+(defun my-process-file (fPath)
+  "Process the file at path FPATH..."
+  (let ((file-changed-p nil))
+    (with-temp-buffer
+      (insert-file-contents fPath)
+      ;; process text
+      ;; set file-changed-p to t or nil
+      (when file-changed-p (write-region 1 (point-max) fPath)))))
+    #+END_SRC
