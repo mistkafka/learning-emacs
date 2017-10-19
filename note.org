@@ -160,3 +160,45 @@ If the current buffer is not associated with a file, its a error."
    (message "argv: %s" arg))
  argv)
    #+END_SRC
+* Elisp Language Advanced
+** Exit function/loop
+*** catch/throw
+   Elisp use =catch=, =throw= to "return (value)" before function/loop execute done. That's different from other language, =throw= need take a ~TAG~, and =catch= only catch the TAG what it take. Like this:
+
+   #+BEGIN_SRC elisp
+(defun test-exit-func ()
+  "Example. using catch/throw to exit function"
+  (interactive)
+  (catch 'user-exit
+    (if (y-or-n-p "exit?")
+	(progn
+	  (message "existing")
+	  (throw 'user-exit 3))		; if yes, exit right away, return 3 to catch
+      (progn
+	(message "went on")
+	4))))
+   #+END_SRC
+
+   It means, if you want to exit function ahead, there is must some ~reasons~, write these reasons mapping(catch/throw pair) in code is good for maintainning.
+   I like this design.
+
+   =throw= can pass a value, as the "return value". And =catch= will catch the value as the expression's value. Like this:
+   
+   #+BEGIN_SRC elisp
+(progn
+  (setq myList [0 1 2 3 4 5])
+  (catch 'found-the-number
+    (mapc
+     (lambda (x)
+       (message "%s" x)
+       (when (equal x 3)
+	 (throw 'found-the-number x)))
+     myList)
+    nil))				; ==> 3, it's the (catch TAG BODY) express's value
+   #+END_SRC   
+
+*** error, user-error
+    Sometimes, we need exit program with some break exception, that's error. =error= or =user-error= will exit function/program with a message.
+
+*** use flag variable to exit while loop
+    Elisp's =while= loop is the same as other language's. So you can use flag variable to exit while loop.
