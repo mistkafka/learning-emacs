@@ -202,3 +202,9 @@ If the current buffer is not associated with a file, its a error."
 
 *** use flag variable to exit while loop
     Elisp's =while= loop is the same as other language's. So you can use flag variable to exit while loop.
+** Function Arguments
+   Elisp's function arguments doesn't support ~keyword arguments~. The define order is:
+
+   #+BEGIN_SRC elisp
+(defun req-A req-B &optional opt-A opt-B optC &rest rest-args)
+   #+END_SRC
